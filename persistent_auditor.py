@@ -1,4 +1,7 @@
 #Input prompt, input validation, and return valid integer/"quit" signal
+from ast import Try
+
+
 def get_valid_input():
     stock = input("Enter stock quantity (or type 'quit' to exit): ")
     if stock.lower() == "quit":
@@ -32,22 +35,32 @@ Number of Failed/Rejected Entries: {failed_attempts}"
 
 #Load inventory from file
 def load_inventory(filename):
-    pass
+    try:
+        with open(filename, 'r') as file:
+            inv = file.read().splitlines()
+    except FileNotFoundError:
+        inv = []
+    return inv
 
 #Save inventory to file
-def save_inventory(filename, total_units):
-    pass
+def save_inventory(filename,orders):
+    inv = open(filename, 'w')
+    inv.write(str(orders))
+    inv.close()
 
 #Auditor main program function
 def auditor():
+    file = "inventory.txt"
     total = 0
     failed = 0
-    #load_inventory("inventory.txt")  # Load inventory from file
+    orders = []
+    inventory = load_inventory(file)  # Load inventory from file
+    #print(inventory) #test
     while True:
         user_input = get_valid_input()
         if user_input == "quit":
             print(generate_report(total, failed))
-            #save_inventory("inventory.txt", total) # Save inventory to file
+            #save_inventory("inventory.txt", orders)  # Save inventory to file
             break
         elif user_input is None:
             failed += 1

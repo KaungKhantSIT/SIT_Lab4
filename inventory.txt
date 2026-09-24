@@ -1,0 +1,2 @@
+1001, Wireless mouse, 2
+1002, Keyboard, 1
