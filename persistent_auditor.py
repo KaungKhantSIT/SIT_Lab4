@@ -1,25 +1,27 @@
 #Input prompt, input validation, and return valid integer/"quit" signal
-from ast import Try
-
-
 def get_valid_input():
-    stock = input("Enter stock quantity (or type 'quit' to exit): ")
-    if stock.lower() == "quit":
+    order = ""
+    product = input("Enter product name (or type 'quit' to exit):").title()
+    if product.lower() == "quit":
+        return "quit"
+    qty = input("Enter stock quantity (or type 'quit' to exit): ")
+    if qty.lower() == "quit":
         return "quit"
     try:
-        stock = int(stock)
-        if stock < 0:
+        qty = int(qty)
+        if qty < 0:
             print("Please enter a positive number.")
             return None
-        return stock
+        return product, qty
     except ValueError:
         print("Please enter a valid number.")
         return None
 
-#Calculates & returns running total 
-def process_delivery(current_total, new_value):
-    new_total = current_total + new_value
-    return new_total
+#Process order and add to session cart 
+def process_orders(cart, order):
+    print(f"\nNew Order Added:\n{order}\n")
+    cart.append(order)
+    return cart
 
 #Takes delivery amt & returns tax
 def calculate_tax(amount):
@@ -44,9 +46,33 @@ def load_inventory(filename):
 
 #Save inventory to file
 def save_inventory(filename,orders):
-    inv = open(filename, 'w')
-    inv.write(str(orders))
-    inv.close()
+    with open(filename, 'w') as file:
+        file.write(str(orders))
+    print(f"Inventory saved to {filename}.")
+
+#Show existing inventory
+def show_inventory(inventory):
+    print("Current Orders:\n")
+    for order in inventory:
+        print(order)
+    print()
+
+#Check total stock of product
+def product_total(inventory, product):
+    total = 0
+    for order in inventory:
+        name = order.split(',')[1].strip()
+        qty = int(order.split(',')[2].strip())
+        if name.lower() == product.lower():
+            total += qty
+    return total
+
+#Alert if total stock exceeds 500 units
+def inventory_cap(inventory,product):
+    total = product_total(inventory, product)
+    if total > 500:  
+        return True
+    return False
 
 #Auditor main program function
 def auditor():
@@ -55,19 +81,24 @@ def auditor():
     failed = 0
     orders = []
     inventory = load_inventory(file)  # Load inventory from file
-    #print(inventory) #test
+    show_inventory(inventory)  # Display current inventory
+    index = int(inventory[-1].split(',')[0]) if inventory else 1001  # Get the last index from inventory or set to 1001 if empty
     while True:
         user_input = get_valid_input()
         if user_input == "quit":
-            print(generate_report(total, failed))
+            #print(generate_report(total, failed))
+            print(orders)
             #save_inventory("inventory.txt", orders)  # Save inventory to file
             break
         elif user_input is None:
             failed += 1
         else:
-            total = process_delivery(total, user_input)
-            if total > 500:
-                print("Alert: Total Inventory exceeds 500 units.")
+            index += 1
+            product, qty = user_input
+            order = f"{index}, {product}, {qty}"
+            process_orders(orders, order)
+            if inventory_cap(inventory, product):
+                print(f"Alert: Total stock of {product} exceeds 500 units.")
                 print(generate_report(total, failed))
                 break
 
