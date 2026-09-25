@@ -68,8 +68,9 @@ def product_total(inventory, product):
     return total
 
 #Alert if total stock exceeds 500 units
-def inventory_cap(inventory,product):
+def inventory_cap(inventory, product, qty):
     total = product_total(inventory, product)
+    total += qty
     if total > 500:  
         return True
     return False
@@ -86,8 +87,6 @@ def auditor():
     while True:
         user_input = get_valid_input()
         if user_input == "quit":
-            #print(generate_report(total, failed))
-            save_inventory("inventory.txt", orders)  # Save inventory to file
             break
         elif user_input is None:
             failed += 1
@@ -95,11 +94,11 @@ def auditor():
             index += 1
             product, qty = user_input
             order = f"{index}, {product}, {qty}"
+            #print(inventory_cap(inventory, product))
+            if inventory_cap(inventory, product, qty):
+                print(f"\nAlert: Total stock of {product} exceeding 500 units.")
+                return
             process_orders(orders, order)
-            if inventory_cap(inventory, product):
-                print(f"Alert: Total stock of {product} exceeds 500 units.")
-                print(generate_report(total, failed))
-                break
-
+    save_inventory("inventory.txt", orders)  # Save inventory to file
 #Run main program
 auditor()
