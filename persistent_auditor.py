@@ -99,6 +99,8 @@ def auditor():
                 print(f"\nAlert: Total stock of {product} exceeding 500 units.")
                 return
             process_orders(orders, order)
-    save_inventory("inventory.txt", orders)  # Save inventory to file
+    if len(orders) > 0:
+        save_inventory("inventory.txt", orders)  # Save inventory to file
+
 #Run main program
 auditor()
