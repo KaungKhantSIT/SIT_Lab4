@@ -4,6 +4,9 @@ def get_valid_input():
     product = input("Enter product name (or type 'quit' to exit):").title()
     if product.lower() == "quit":
         return "quit"
+    elif not product.isalpha():
+        print("Please enter a valid product name.")
+        return None
     qty = input("Enter stock quantity (or type 'quit' to exit): ")
     if qty.lower() == "quit":
         return "quit"
