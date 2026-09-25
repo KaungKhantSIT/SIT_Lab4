@@ -46,9 +46,7 @@ def load_inventory(filename):
 
 #Save inventory to file
 def save_inventory(filename,orders):
-    with open(filename, 'w') as file:
-        file.write(str(orders))
-    print(f"Inventory saved to {filename}.")
+    pass
 
 #Show existing inventory
 def show_inventory(inventory):
@@ -87,7 +85,6 @@ def auditor():
         user_input = get_valid_input()
         if user_input == "quit":
             #print(generate_report(total, failed))
-            print(orders)
             #save_inventory("inventory.txt", orders)  # Save inventory to file
             break
         elif user_input is None:
