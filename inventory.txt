@@ -1,3 +1,9 @@
 1001, Wireless mouse, 2
 1002, Keyboard, 1
 1003, Keyboard, 2
+1004, Laptop, 3
+1005, Mic, 2
+1006, Usb C Cable, 3
+1007, Usb A Cable, 2
+1008, Mousepad, 3
+1009, Powerbank, 2
