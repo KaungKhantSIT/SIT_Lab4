@@ -100,7 +100,7 @@ def auditor():
             #print(inventory_cap(inventory, product))
             if inventory_cap(inventory, product, qty):
                 print(f"\nAlert: Total stock of {product} exceeding 500 units.")
-                return
+                break
             process_orders(orders, order)
     if len(orders) > 0:
         save_inventory("inventory.txt", orders)  # Save inventory to file
